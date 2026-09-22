@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>123</title>
+    <title>C++模板编程学习记录</title>
     <link href="/2026/09/22/123/"/>
     <url>/2026/09/22/123/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h3 id="第一章-Hello模板"><a href="#第一章-Hello模板" class="headerlink" title="第一章 Hello模板"></a>第一章 Hello模板</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;</span><br><span class="hljs-function">T <span class="hljs-type">const</span>&amp; <span class="hljs-title">maxElement</span><span class="hljs-params">(T <span class="hljs-type">const</span> *ve, <span class="hljs-type">unsigned</span> sz)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-function">T <span class="hljs-type">const</span> *<span class="hljs-title">maxValue</span><span class="hljs-params">(ve)</span></span>;<br>  <span class="hljs-keyword">for</span>(<span class="hljs-type">unsigned</span> index = <span class="hljs-number">1</span>; index &lt; sz; ++ index)<br>  &#123;<br>    <span class="hljs-keyword">if</span>(ve[index] &gt; *maxValue)<br>    &#123;<br>      maxValue = &amp;(ve[i]);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> *maxValue<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
     
     
     
