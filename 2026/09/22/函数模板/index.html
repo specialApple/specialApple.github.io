@@ -19,21 +19,21 @@
   <meta name="author" content="LL">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="函数模板函数模板的实现模板函数的一般形式如下： 12345678910111213template&lt;typename T&gt;T const&amp; maxElement(T const *ve, unsigned sz)&#123;  T const *maxValue(ve);  for(unsigned index &#x3D; 1; index &lt; sz; ++ index)  &amp;#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2026/09/22/hello-world/index.html">
+<meta property="og:title" content="C++模板编程学习记录">
+<meta property="og:url" content="http://example.com/2026/09/22/%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF/index.html">
 <meta property="og:site_name" content="SpecialApple">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="函数模板函数模板的实现模板函数的一般形式如下： 12345678910111213template&lt;typename T&gt;T const&amp; maxElement(T const *ve, unsigned sz)&#123;  T const *maxValue(ve);  for(unsigned index &#x3D; 1; index &lt; sz; ++ index)  &amp;#">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-09-22T13:35:23.266Z">
-<meta property="article:modified_time" content="2026-09-21T16:32:55.943Z">
+<meta property="article:published_time" content="2026-09-22T13:46:17.000Z">
+<meta property="article:modified_time" content="2026-09-25T03:44:45.543Z">
 <meta property="article:author" content="LL">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Hello World - SpecialApple</title>
+  <title>C++模板编程学习记录 - SpecialApple</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -302,7 +302,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="C++模板编程学习记录"></span>
           
         </div>
 
@@ -313,7 +313,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-22 21:35" pubdate>
+        <time datetime="2026-09-22 21:46" pubdate>
           2026年9月22日 晚上
         </time>
       </span>
@@ -325,7 +325,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          367 字
+          1.3k 字
         
       </span>
     
@@ -336,7 +336,7 @@
         
         
         
-          4 分钟
+          11 分钟
         
       </span>
     
@@ -375,24 +375,28 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hello World</h1>
+            <h1 id="seo-header">C++模板编程学习记录</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+                <h3 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h3><h4 id="函数模板的实现"><a href="#函数模板的实现" class="headerlink" title="函数模板的实现"></a>函数模板的实现</h4><p>模板函数的一般形式如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;</span><br><span class="hljs-function">T <span class="hljs-type">const</span>&amp; <span class="hljs-title">maxElement</span><span class="hljs-params">(T <span class="hljs-type">const</span> *ve, <span class="hljs-type">unsigned</span> sz)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-function">T <span class="hljs-type">const</span> *<span class="hljs-title">maxValue</span><span class="hljs-params">(ve)</span></span>;<br>  <span class="hljs-keyword">for</span>(<span class="hljs-type">unsigned</span> index = <span class="hljs-number">1</span>; index &lt; sz; ++ index)<br>  &#123;<br>    <span class="hljs-keyword">if</span>(ve[index] &gt; *maxValue)<br>    &#123;<br>      maxValue = &amp;(ve[i]);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> *maxValue<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>类型模板参数以关键字typename或者class标记，后接参数名，两个关键字在标记模板参数类型时完全等价，都表示参数为类型参数。</p>
+<p>根据所给定的模板参数值以及完整的函数模板声明，编译器可以自动的生成一个对所需数据类型进行操作的函数，称为函数模板实例。</p>
+<p>在编译期间完成依模板生成函数并链接的工作，且与之相关的函数调用都是静态调用。</p>
+<h4 id="模板参数自动推导"><a href="#模板参数自动推导" class="headerlink" title="模板参数自动推导"></a>模板参数自动推导</h4><p>C++语言中凡是可以推导出的模板参数的值，就无需在模板实参表中写明，可以直接像使用函数一样使用函数模板。</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dns">st<span class="hljs-number">d::c</span>out &lt;&lt; max_element<span class="hljs-punctuation">(</span>l,<span class="hljs-number">8</span><span class="hljs-punctuation">)</span> &lt;&lt; st<span class="hljs-number">d::e</span>ndl<span class="hljs-comment">;</span><br>st<span class="hljs-number">d::c</span>out &lt;&lt; max_element<span class="hljs-punctuation">(</span>cl,<span class="hljs-number">8</span><span class="hljs-punctuation">)</span> &lt;&lt; st<span class="hljs-number">d::e</span>ndl<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>编译器只根据函数调用时给出的实参列表来推导模板参数值，与函数参数类型无关的模板参数其值无法推导。</li>
+<li>与函数返回值相关的模板参数其值也无法推导。</li>
+<li>所有可推导模板参数必须是连续位于模板参数列表尾部，中间不能有不可推导的模板参数。</li>
+</ul>
+<h4 id="模板参数默认值"><a href="#模板参数默认值" class="headerlink" title="模板参数默认值"></a>模板参数默认值</h4><p>最新的C++标准允许为函数模板参数赋默认值：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dart">template&lt;typename <span class="hljs-title class_">T0</span> = float,<br>         typename <span class="hljs-title class_">T1</span>,<br>         typename <span class="hljs-title class_">T2</span> = float,<br>         typename <span class="hljs-title class_">T3</span>,<br>         typename <span class="hljs-title class_">T4</span>&gt;<br><span class="hljs-title class_">T0</span> <span class="hljs-title function_">func</span>(<span class="hljs-title class_">T1</span> v1, <span class="hljs-title class_">T3</span> v3, <span class="hljs-title class_">T4</span> v4);<br></code></pre></td></tr></table></figure>
+<h4 id="模板参数静态变量"><a href="#模板参数静态变量" class="headerlink" title="模板参数静态变量"></a>模板参数静态变量</h4><p>当有多个调用使用相同的模板参数值时，编译器只为此模板参数值组生成同一函数而将不同调用都链接到同一函数上。只要有任意模板参数值不同，编译器就会生成不同的函数实体以供链接。</p>
+<h4 id="模板文件位置"><a href="#模板文件位置" class="headerlink" title="模板文件位置"></a>模板文件位置</h4><p>在C++中一般的函数及类的声明均应放在头文件中如.h文件，而其实现则应放在代码文件中如.c、.cpp文件中，这样便于将代码分散编译到多个目标文件中，并通过链接形成一个完整的目标文件。当然模板中的函数也可以有自己的声明与实现，但是编译器不会在读到模板的实现时立即生成实际代码，因为模板的参数类型还未知，无法进行编译。但模板是随用随生成的，需要将整个模板均放在头文件中，对于编译器来讲，模板实现也是一种声明，声明如何自动生成代码，所以模板的实现应该放在头文件中。</p>
+<p>但模板放在头文件中当其他，需要生成模板实例时，编译器可以自动生成，但是对于相同的模板参数会产生重复的模板实例，C++在链接时会识别并合并等价的模板实例。链接器不考虑函数具体内容，仅通过函数名、模板实参列表以及参数列表等“接口”信息来判断两个函数是否等价。保留的话仅保留第一次读到的模板。</p>
 
                 
               </div>
@@ -410,8 +414,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>http://example.com/2026/09/22/hello-world/</div>
+      <div>C++模板编程学习记录</div>
+      <div>http://example.com/2026/09/22/函数模板/</div>
     </div>
     <div class="license-meta">
       
@@ -455,15 +459,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/22/%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF/" title="C++模板编程学习记录">
+                      <a href="/2026/09/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++模板编程学习记录</span>
+                        <span class="hidden-mobile">数据结构</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/09/22/hello-world/" title="Hello World">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
