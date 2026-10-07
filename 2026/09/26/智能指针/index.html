@@ -1,0 +1,921 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="LL">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="智能指针在C++11中通过智能指针，不需要手动释放内存  std::unique_ptr  std::shared_ptr  std::weak_ptr  std::auto_ptr(已被废弃)  智能指针是原始指针的封装，优点是自动分配内存，不用担心潜在的内存泄露  智能指针只解决一部分问题，即独占&#x2F;共享所有权指针的释放、传输  智能指针没有从根本上解决C++内存安全问题，不加以注意依">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能指针">
+<meta property="og:url" content="http://example.com/2026/09/26/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/index.html">
+<meta property="og:site_name" content="SpecialApple">
+<meta property="og:description" content="智能指针在C++11中通过智能指针，不需要手动释放内存  std::unique_ptr  std::shared_ptr  std::weak_ptr  std::auto_ptr(已被废弃)  智能指针是原始指针的封装，优点是自动分配内存，不用担心潜在的内存泄露  智能指针只解决一部分问题，即独占&#x2F;共享所有权指针的释放、传输  智能指针没有从根本上解决C++内存安全问题，不加以注意依">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-26T09:00:52.000Z">
+<meta property="article:modified_time" content="2026-10-07T03:20:30.642Z">
+<meta property="article:author" content="LL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>智能指针 - SpecialApple</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="智能指针"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-26 17:00" pubdate>
+          2026年9月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          19k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          157 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">智能指针</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h3><p>在C++11中通过智能指针，不需要手动释放内存</p>
+<ul>
+<li><p>std::unique_ptr</p>
+</li>
+<li><p>std::shared_ptr</p>
+</li>
+<li><p>std::weak_ptr</p>
+</li>
+<li><p>std::auto_ptr(已被废弃)</p>
+</li>
+<li><p>智能指针是原始指针的封装，优点是自动分配内存，不用担心潜在的内存泄露</p>
+</li>
+<li><p>智能指针只解决一部分问题，即独占&#x2F;共享所有权指针的释放、传输</p>
+</li>
+<li><p>智能指针没有从根本上解决C++内存安全问题，不加以注意依然会造成内存安全问题</p>
+</li>
+</ul>
+<h4 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h4><ul>
+<li>在任何给定的时刻，只能有一个指针管理内存</li>
+<li>当指针超出作用域时，内存将自动释放</li>
+<li>该类型指针不可Copy，只可以Move</li>
+<li>三种创建方式</li>
+<li><ul>
+<li>通过已有裸指针创建</li>
+</ul>
+</li>
+<li><ul>
+<li>通过new来创建</li>
+</ul>
+</li>
+<li><ul>
+<li>通过std::make_unique创建 （推荐）</li>
+</ul>
+</li>
+<li>unique_ptr可以通过get（）获取地址</li>
+<li>unique_ptr实现了-&gt;与*</li>
+<li><ul>
+<li>可以通过-&gt;调用成员函数</li>
+</ul>
+</li>
+<li><ul>
+<li>可以通过*调用 dereferencing</li>
+</ul>
+</li>
+</ul>
+<h5 id="Passing-by-value（按值传递）"><a href="#Passing-by-value（按值传递）" class="headerlink" title="Passing by value（按值传递）"></a>Passing by value（按值传递）</h5><ul>
+<li>需要用 std::move 来转移内存所有权。</li>
+<li>如果参数直接传入 std::make_unique 语句（临时对象&#x2F;右值），会自动转换为 Move<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Cat &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot; created.<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Cat &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot; destroyed.<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>// 按值传递，接管 unique_ptr 的所有权<br>void takeOwner<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; cat<span class="hljs-punctuation">)</span> &#123;<br>    if <span class="hljs-punctuation">(</span>cat<span class="hljs-punctuation">)</span> &#123;<br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Function took owner of: &quot;</span> &lt;&lt; cat-&gt;name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#125;<br>&#125; // 函数结束时，cat 销毁，Cat 对象释放<br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; myCat = st<span class="hljs-number">d::</span>make_unique&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Mimi&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    <br>    // takeOwner<span class="hljs-punctuation">(</span>myCat<span class="hljs-punctuation">)</span><span class="hljs-comment">; // ❌ 编译报错！unique_ptr 禁止拷贝</span><br>    <br>    // 方式<span class="hljs-number">1</span>：使用 st<span class="hljs-number">d::</span>move 显式转移所有权<br>    takeOwner<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>move<span class="hljs-punctuation">(</span>myCat<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // ✅ 正确</span><br>    // 此时 myCat 变为 nullptr，不能再使用<br>    <br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;myCat is null? &quot;</span> &lt;&lt; <span class="hljs-punctuation">(</span>myCat == nullptr ? <span class="hljs-string">&quot;Yes&quot;</span> : <span class="hljs-string">&quot;No&quot;</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    // 方式<span class="hljs-number">2</span>：直接传入 make_unique 临时对象，自动转为 Move<br>    takeOwner<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>make_unique&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Tom&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // ✅ 正确，无需手动 move</span><br>    <br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-title class_">Cat</span> <span class="hljs-title class_">Mimi</span> created.<br><span class="hljs-title class_">Function</span> took owner of: <span class="hljs-title class_">Mimi</span><br><span class="hljs-title class_">Cat</span> <span class="hljs-title class_">Mimi</span> destroyed.<br>myCat <span class="hljs-keyword">is</span> null? <span class="hljs-title class_">Yes</span><br><span class="hljs-title class_">Cat</span> <span class="hljs-title class_">Tom</span> created.<br><span class="hljs-title class_">Function</span> took owner of: <span class="hljs-title class_">Tom</span><br><span class="hljs-title class_">Cat</span> <span class="hljs-title class_">Tom</span> destroyed.<br><br>[<span class="hljs-title class_">Execution</span> complete <span class="hljs-keyword">with</span> exit code <span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="Passing-by-reference（按引用传递）"><a href="#Passing-by-reference（按引用传递）" class="headerlink" title="Passing by reference（按引用传递）"></a>Passing by reference（按引用传递）</h5><ul>
+<li>如果设置参数为 const 则不能改变指向（例如不能调用 reset()）。</li>
+<li>reset() 方法为智能指针清空方法（释放当前对象，将指针置空）。<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Cat &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot; created.<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Cat &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot; destroyed.<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>// <span class="hljs-number">1</span>. 非 const 引用：可以修改指针指向（可以调用 reset）<br>void modifyPtr<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt;&amp; cat<span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Before reset: &quot;</span> &lt;&lt; cat-&gt;name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    cat.reset<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // ✅ 允许，清空指针，导致 Cat 对象被销毁</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;After reset, is null? &quot;</span> &lt;&lt; <span class="hljs-punctuation">(</span>cat == nullptr ? <span class="hljs-string">&quot;Yes&quot;</span> : <span class="hljs-string">&quot;No&quot;</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>&#125;<br><br>// <span class="hljs-number">2</span>. const 引用：只能读取，不能修改指针<br>void readPtr<span class="hljs-punctuation">(</span>const st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt;&amp; cat<span class="hljs-punctuation">)</span> &#123;<br>    if <span class="hljs-punctuation">(</span>cat<span class="hljs-punctuation">)</span> &#123;<br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Reading from const ref: &quot;</span> &lt;&lt; cat-&gt;name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#125;<br>    // cat.reset<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // ❌ 编译报错！const 引用禁止修改 unique_ptr 的指向</span><br>&#125;<br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    auto myCat = st<span class="hljs-number">d::</span>make_unique&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Mimi&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    <br>    readPtr<span class="hljs-punctuation">(</span>myCat<span class="hljs-punctuation">)</span><span class="hljs-comment">;   // 传入 const 引用，仅读取</span><br>    modifyPtr<span class="hljs-punctuation">(</span>myCat<span class="hljs-punctuation">)</span><span class="hljs-comment">; // 传入非 const 引用，重置指针</span><br>    <br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-title class_">Cat</span> <span class="hljs-title class_">Mimi</span> created.<br><span class="hljs-title class_">Reading</span> from <span class="hljs-keyword">const</span> ref: <span class="hljs-title class_">Mimi</span><br><span class="hljs-title class_">Before</span> reset: <span class="hljs-title class_">Mimi</span><br><span class="hljs-title class_">Cat</span> <span class="hljs-title class_">Mimi</span> destroyed.<br><span class="hljs-title class_">After</span> reset, <span class="hljs-keyword">is</span> null? <span class="hljs-title class_">Yes</span><br><br>[<span class="hljs-title class_">Execution</span> complete <span class="hljs-keyword">with</span> exit code <span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="Return-by-value（按值返回）"><a href="#Return-by-value（按值返回）" class="headerlink" title="Return by value（按值返回）"></a>Return by value（按值返回）</h5><ul>
+<li><p>指向一个 local object：可以直接在函数内 make_unique 并返回。C++ 的移动语义和返回值优化（RVO&#x2F;NRVO）会安全地将资源转移给调用者，不会报错。</p>
+</li>
+<li><p>可以用作链式函数：返回智能指针，结合返回自身引用的成员函数，可以实现类似 createCat()-&gt;setName(“Tom”) 的链式调用。</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Constructor of Cat : &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Destructor of Cat : &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    <br>    void cat_info<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> const &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;cat info name : &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br><br>    // 返回 *this 的引用，支持链式调用<br>    Cat&amp; setName<span class="hljs-punctuation">(</span>const st<span class="hljs-number">d::</span>string&amp; newName<span class="hljs-punctuation">)</span> &#123;<br>        this-&gt;name = newName<span class="hljs-comment">;</span><br>        return *this<span class="hljs-comment">;</span><br>    &#125;<br>    Cat&amp; setAge<span class="hljs-punctuation">(</span>int age<span class="hljs-punctuation">)</span> &#123;<br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Age set to &quot;</span> &lt;&lt; age &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>        return *this<span class="hljs-comment">;</span><br>    &#125;<br>&#125;<span class="hljs-comment">;</span><br><br>// 按值返回局部创建的 unique_ptr<br>st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; get_unique_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    auto <span class="hljs-keyword">ptr</span> = st<span class="hljs-number">d::</span>make_unique&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;local cat&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 局部对象</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;unique address: &quot;</span> &lt;&lt; <span class="hljs-keyword">ptr</span>.get<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;unique address: &quot;</span> &lt;&lt; &amp;<span class="hljs-keyword">ptr</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    return <span class="hljs-keyword">ptr</span><span class="hljs-comment">; // ✅ 安全返回，编译器自动使用移动语义（RVO）</span><br>&#125;<br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    // 情况 <span class="hljs-number">1</span>：用变量接收返回值（延长生命周期）<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[情况 1] 用变量接收返回值：<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; myCat = get_unique_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    myCat-&gt;setName<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Tom&quot;</span><span class="hljs-punctuation">)</span>.setAge<span class="hljs-punctuation">(</span><span class="hljs-number">3</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // ✅ 链式调用（利用返回 *this 引用）</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    // 注意：此时 myCat 是 main 的局部变量，local cat 直到 main 结束才析构<br><br>    // 情况 <span class="hljs-number">2</span>：不接收返回值，直接链式调用（对应你截图里的疑惑）<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>[情况 2] 不接收返回值，直接调用：<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    get_unique_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>-&gt;cat_info<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; </span><br>    // 解析：get_unique_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> 返回的是一个临时 unique_ptr（右值）。<br>    // 这一整条语句执行完（遇到分号）后，临时对象立即销毁，local cat 随之析构。<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    // 注意：因为临时对象在语句结束就销毁了，所以 local cat 在 <span class="hljs-string">&quot;===== yz =====&quot;</span> 之前被回收！<br><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>========== main 函数即将结束 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs delphi">[情况 <span class="hljs-number">1</span>] 用变量接收返回值：<br><span class="hljs-function"><span class="hljs-keyword">Constructor</span> <span class="hljs-title">of</span> <span class="hljs-title">Cat</span> :</span> <span class="hljs-keyword">local</span> cat<br>unique address: <span class="hljs-number">0</span>x55f8402772c0<br>unique address: <span class="hljs-number">0</span>x7ffcdb9a6198<br>Age <span class="hljs-keyword">set</span> <span class="hljs-keyword">to</span> <span class="hljs-number">3</span><br>==========<br><br>[情况 <span class="hljs-number">2</span>] 不接收返回值，直接调用：<br><span class="hljs-function"><span class="hljs-keyword">Constructor</span> <span class="hljs-title">of</span> <span class="hljs-title">Cat</span> :</span> <span class="hljs-keyword">local</span> cat<br>unique address: <span class="hljs-number">0</span>x55f8402772f0<br>unique address: <span class="hljs-number">0</span>x7ffcdb9a61a0<br>cat info <span class="hljs-keyword">name</span> : <span class="hljs-keyword">local</span> cat<br><span class="hljs-function"><span class="hljs-keyword">Destructor</span> <span class="hljs-title">of</span> <span class="hljs-title">Cat</span> :</span> <span class="hljs-keyword">local</span> cat<br>==========<br><br>========== main 函数即将结束 ==========<br><span class="hljs-function"><span class="hljs-keyword">Destructor</span> <span class="hljs-title">of</span> <span class="hljs-title">Cat</span> :</span> Tom<br><br>[Execution complete <span class="hljs-keyword">with</span> <span class="hljs-keyword">exit</span> code <span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>传参：unique_ptr 只能移动。用 std::move 放弃所有权，或者传递临时对象。想借用但不转移所有权，用 const unique_ptr&amp;。想修改指针本身（如 reset），用非 const 引用 unique_ptr&amp;。</p>
+</li>
+<li><p>返回：放心大胆地按值返回 unique_ptr（尤其是局部对象），C++ 的移动语义会保证性能和安全。</p>
+</li>
+<li><p>避坑：对于返回的 unique_ptr，如果只在单条语句中链式调用（如 get()-&gt;func()），对象会在该语句结束时立即销毁。如果需要延长它的生命周期，请务必用一个具名变量把它接住。</p>
+</li>
+</ul>
+<h4 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h4><ul>
+<li>shared_ptr 计数指针，又称共享指针。</li>
+<li>与 unique_ptr 独占所有权不同，shared_ptr 可以共享数据。它通过内部的引用计数（Reference Count）机制来管理内存：每当多一个 shared_ptr 指向同一块内存，计数加一；每销毁一个，计数减一；当计数归零时，自动释放内存。<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Constructor: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Destructor: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;--- 1. 基础概念与引用计数 ---<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    // 创建一个 shared_ptr，引用计数为 <span class="hljs-number">1</span><br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; p1 = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Mimi&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;p1 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br><br>    &#123;<br>        // 拷贝 p1，共享同一块内存，引用计数为 <span class="hljs-number">2</span><br>        st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; p2 = p1<span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;p1 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;p2 use_count: &quot;</span> &lt;&lt; p2.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>    &#125; // p2 离开作用域，被销毁，引用计数减为 <span class="hljs-number">1</span><br><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;p2 已销毁。<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;p1 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br><br>    return <span class="hljs-number">0</span><span class="hljs-comment">; // main 结束，p1 销毁，引用计数归零，Cat 对象被回收</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="Passed-by-value（按值传递）"><a href="#Passed-by-value（按值传递）" class="headerlink" title="Passed by value（按值传递）"></a>Passed by value（按值传递）</h5><ul>
+<li>会发生拷贝（copy）。</li>
+<li>函数内部计数器加一（因为多了一个 shared_ptr 指向该对象）</li>
+<li>函数执行完毕后，拷贝的指针销毁，计数器减一。<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Constructor: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;Destructor: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>void passByValue<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; c<span class="hljs-punctuation">)</span> &#123;<br>    // 函数内部，发生了拷贝，计数加一<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数内] use_count: &quot;</span> &lt;&lt; c.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>    c-&gt;name = <span class="hljs-string">&quot;Mimi (Modified in function)&quot;</span><span class="hljs-comment">;</span><br>&#125; // 函数结束，拷贝的 c 销毁，计数减一<br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>--- 2.1 按值传递 ---<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; p1 = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Mimi&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] 调用前 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br>    passByValue<span class="hljs-punctuation">(</span>p1<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] 调用后 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="Passed-by-ref（按引用传递）"><a href="#Passed-by-ref（按引用传递）" class="headerlink" title="Passed by ref（按引用传递）"></a>Passed by ref（按引用传递）</h5><ul>
+<li>不发生拷贝，不增加引用计数。</li>
+<li>const 表示不可改变指向（即不能在函数内部调用 reset() 或重新赋值，但可以修改指向对象的内容）。</li>
+<li>通常推荐使用 const std::shared_ptr<T>&amp; 传参，既避免拷贝开销，又防止函数内部改变指针指向。<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [Constructor] Cat: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [Destructor]  Cat: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>// ==========================================<br>// <span class="hljs-number">1</span>. 不加 const 的引用传递（st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt;&amp;）<br>// ==========================================<br>void passByNonConstRef<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt;&amp; c<span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [函数内] use_count: &quot;</span> &lt;&lt; c.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1，无拷贝</span><br>    <br>    // ✅ 允许：修改指向对象的内容<br>    c-&gt;name = <span class="hljs-string">&quot;Mimi (Modified in non-const ref)&quot;</span><span class="hljs-comment">;</span><br>    <br>    // ✅ 允许：改变指针本身的指向（甚至清空）<br>    // c.reset<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 如果取消注释，外部的智能指针也会被置空</span><br>    // c = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Brand New Cat&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 如果取消注释，外部指针将指向新对象</span><br>&#125;<br><br>// ==========================================<br>// <span class="hljs-number">2</span>. 加 const 的引用传递（const st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt;&amp;）<br>// ==========================================<br>void passByConstRef<span class="hljs-punctuation">(</span>const st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt;&amp; c<span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [函数内] use_count: &quot;</span> &lt;&lt; c.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1，无拷贝</span><br>    <br>    // ✅ 允许：修改指向对象的内容（const 保护的是指针本身，不是它指向的对象）<br>    c-&gt;name = <span class="hljs-string">&quot;Tom (Modified in const ref)&quot;</span><span class="hljs-comment">;</span><br>    <br>    // ❌ 禁止：c.reset<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 编译报错！const 引用禁止改变指针指向</span><br>    // ❌ 禁止：c = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;New Cat&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 编译报错！禁止重新赋值</span><br>&#125;<br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;========== 测试不加 const 引用 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; p1 = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Original Cat&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] 调用前 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 1</span><br>    passByNonConstRef<span class="hljs-punctuation">(</span>p1<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] 调用后 use_count: &quot;</span> &lt;&lt; p1.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 1</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] p1 当前指向的名字: &quot;</span> &lt;&lt; p1-&gt;name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;       // 名字已被修改</span><br>    <br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>========== 测试加 const 引用 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; p2 = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Another Cat&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] 调用前 use_count: &quot;</span> &lt;&lt; p2.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 1</span><br>    passByConstRef<span class="hljs-punctuation">(</span>p2<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] 调用后 use_count: &quot;</span> &lt;&lt; p2.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 1</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[函数外] p2 当前指向的名字: &quot;</span> &lt;&lt; p2-&gt;name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;       // 名字已被修改</span><br>    <br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>========== main 函数即将结束 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="Returning-by-value（按值返回）"><a href="#Returning-by-value（按值返回）" class="headerlink" title="Returning by value（按值返回）"></a>Returning by value（按值返回）</h5><ul>
+<li>安全返回局部对象：可以在函数内 make_shared 并安全返回。得益于 C++ 的移动语义和 RVO（返回值优化），这不会导致性能问题。</li>
+<li>引用计数的变化：返回时会拷贝&#x2F;移动，接收变量后引用计数会反映当前的所有者数量。</li>
+<li>支持链式调用：可以结合返回 *this 引用的成员函数，实现链式调用。<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    <br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; <br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [Constructor] Cat: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; </span><br>    &#125;<br>    <br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; <br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [Destructor]  Cat: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; </span><br>    &#125;<br>    <br>    void cat_info<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> const &#123; <br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  cat info name : &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; </span><br>    &#125;<br>    <br>    // 返回 *this 的引用，支持链式调用<br>    Cat&amp; setName<span class="hljs-punctuation">(</span>const st<span class="hljs-number">d::</span>string&amp; n<span class="hljs-punctuation">)</span> &#123; <br>        this-&gt;name = n<span class="hljs-comment">; </span><br>        return *this<span class="hljs-comment">; </span><br>    &#125;<br>&#125;<span class="hljs-comment">;</span><br><br>// 按值返回局部创建的 shared_ptr<br>st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; get_shared_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; <span class="hljs-keyword">ptr</span> = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;local cat&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [函数内] use_count: &quot;</span> &lt;&lt; <span class="hljs-keyword">ptr</span>.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br>    return <span class="hljs-keyword">ptr</span><span class="hljs-comment">; // ✅ 安全返回，触发移动语义（RVO）</span><br>&#125;<br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;========== Returning by value 演示 ==========<span class="hljs-char escape_">\n</span><span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    // 【情况 <span class="hljs-keyword">A</span>：用变量接收返回值，延长生命周期】<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[情况 A] 用变量接收返回值：<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#123;<br>        st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; myCat = get_shared_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; </span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [接收后] use_count: &quot;</span> &lt;&lt; myCat.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br>        myCat-&gt;setName<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Tom&quot;</span><span class="hljs-punctuation">)</span>.cat_info<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 链式调用</span><br>    &#125; // myCat 离开作用域，销毁，local cat 被回收<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  myCat 作用域结束，local cat 已被回收<span class="hljs-char escape_">\n</span><span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    // 【情况 B：不接收返回值，直接链式调用】（对应你之前的疑惑）<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;[情况 B] 不接收返回值，直接调用：<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    get_shared_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>-&gt;cat_info<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; </span><br>    // 解析：get_shared_ptr<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> 返回一个临时 shared_ptr（右值）。<br>    // 遇到分号后，临时 shared_ptr 立即销毁，引用计数归零，local cat 随之析构。<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  ===== yz =====<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; </span><br>    // 注意：local cat 在 <span class="hljs-string">&quot;===== yz =====&quot;</span> 之前就被回收了！<br>    // 原因：临时对象生命周期仅限于当前这一整行语句（遇到分号即结束）。<br>    <br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>========== main 函数即将结束 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs delphi">========== Returning by value 演示 ==========<br><br>[情况 A] 用变量接收返回值：<br>  [<span class="hljs-function"><span class="hljs-keyword">Constructor</span>] <span class="hljs-title">Cat</span>:</span> <span class="hljs-keyword">local</span> cat<br>  [函数内] use_count: <span class="hljs-number">1</span><br>  [接收后] use_count: <span class="hljs-number">1</span><br>  cat info <span class="hljs-keyword">name</span> : Tom<br>  [<span class="hljs-function"><span class="hljs-keyword">Destructor</span>]  <span class="hljs-title">Cat</span>:</span> Tom<br>  myCat 作用域结束，<span class="hljs-keyword">local</span> cat 已被回收<br><br>[情况 B] 不接收返回值，直接调用：<br>  [<span class="hljs-function"><span class="hljs-keyword">Constructor</span>] <span class="hljs-title">Cat</span>:</span> <span class="hljs-keyword">local</span> cat<br>  [函数内] use_count: <span class="hljs-number">1</span><br>  cat info <span class="hljs-keyword">name</span> : <span class="hljs-keyword">local</span> cat<br>  [<span class="hljs-function"><span class="hljs-keyword">Destructor</span>]  <span class="hljs-title">Cat</span>:</span> <span class="hljs-keyword">local</span> cat<br>  ===== yz =====<br><br>========== main 函数即将结束 ==========<br><br>[Execution complete <span class="hljs-keyword">with</span> <span class="hljs-keyword">exit</span> code <span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure></li>
+<li>核心机制：共享所有权。靠引用计数管理内存（拷贝加一，销毁减一，归零释放）。</li>
+<li>创建方式：推荐 auto p &#x3D; std::make_shared<T>(参数);。</li>
+<li>与 unique_ptr 区别：unique_ptr 独占（只能 move），shared_ptr 共享（可以 copy）。</li>
+<li>函数传参：首选 const std::shared_ptr<T>&amp;（不增计数，无拷贝开销，保护指针指向）。</li>
+<li>按值返回：安全，支持链式调用。但不接收返回值时，临时对象遇分号立即销毁。</li>
+<li>致命陷阱：循环引用会导致内存泄漏。互相指向时，其中一方必须改用 std::weak_ptr。</li>
+</ul>
+<h3 id="shared-ptr-与-unique-ptr-的转换规则"><a href="#shared-ptr-与-unique-ptr-的转换规则" class="headerlink" title="shared_ptr 与 unique_ptr 的转换规则"></a>shared_ptr 与 unique_ptr 的转换规则</h3><ul>
+<li>不能将 shared_ptr 转换为 unique_ptr</li>
+<li><ul>
+<li>原因：unique_ptr 是独占所有权，而 shared_ptr 是共享所有权（可能有多个指针指向同一块内存）。如果强行把 shared_ptr 变成 unique_ptr，其他共享该内存的指针就会悬空，导致双重释放等严重错误。C++ 标准直接禁止了这种转换。</li>
+</ul>
+</li>
+<li>unique_ptr 可以转换为 shared_ptr</li>
+<li><ul>
+<li>原因：unique_ptr 本身就是独占的，把所有权转移给 shared_ptr 是安全的。转换后，shared_ptr 接管该对象，引用计数变为 1。</li>
+</ul>
+</li>
+<li><ul>
+<li>转换方式：必须通过 std::move 显式转移所有权。</li>
+</ul>
+</li>
+<li><ul>
+<li>转换后状态：原 unique_ptr 变为 nullptr，不再拥有该对象<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>class Cat &#123;<br>public:<br>    st<span class="hljs-number">d::</span>string name<span class="hljs-comment">;</span><br>    Cat<span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>string n<span class="hljs-punctuation">)</span> : name<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [Constructor] Cat: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~Cat<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [Destructor]  Cat: &quot;</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;========== 1. 尝试将 shared_ptr 转换为 unique_ptr (非法) ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; sharedCat = st<span class="hljs-number">d::</span>make_shared&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Mimi&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    <br>    // ❌ 编译报错！C++ 禁止将 shared_ptr 转换为 unique_ptr。<br>    // st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; uniqueCat1 = sharedCat<span class="hljs-comment">; </span><br>    // st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; uniqueCat2 = st<span class="hljs-number">d::</span>move<span class="hljs-punctuation">(</span>sharedCat<span class="hljs-punctuation">)</span><span class="hljs-comment">; // 也不行，会报错</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  (代码已被注释，无法编译，证明转换被禁止)<span class="hljs-char escape_">\n</span><span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;========== 2. 将 unique_ptr 转换为 shared_ptr (合法) ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    // <span class="hljs-number">1</span>. 创建一个 unique_ptr<br>    st<span class="hljs-number">d::</span>unique_ptr&lt;Cat&gt; uniqueCat = st<span class="hljs-number">d::</span>make_unique&lt;Cat&gt;<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Tom&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  uniqueCat 是否为空: &quot;</span> &lt;&lt; <span class="hljs-punctuation">(</span>uniqueCat == nullptr ? <span class="hljs-string">&quot;Yes&quot;</span> : <span class="hljs-string">&quot;No&quot;</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    // <span class="hljs-number">2</span>. 使用 st<span class="hljs-number">d::</span>move 转换为 shared_ptr<br>    st<span class="hljs-number">d::</span>shared_ptr&lt;Cat&gt; sharedCat2 = st<span class="hljs-number">d::</span>move<span class="hljs-punctuation">(</span>uniqueCat<span class="hljs-punctuation">)</span><span class="hljs-comment">; </span><br><br>    // <span class="hljs-number">3</span>. 检查转换后的状态<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  转换后 uniqueCat 是否为空: &quot;</span> &lt;&lt; <span class="hljs-punctuation">(</span>uniqueCat == nullptr ? <span class="hljs-string">&quot;Yes&quot;</span> : <span class="hljs-string">&quot;No&quot;</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  转换后 sharedCat2 use_count: &quot;</span> &lt;&lt; sharedCat2.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>========== main 函数即将结束 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h4 id="weak-ptr（弱引用指针）"><a href="#weak-ptr（弱引用指针）" class="headerlink" title="weak_ptr（弱引用指针）"></a>weak_ptr（弱引用指针）</h4><ul>
+<li>不拥有所有权：weak_ptr 指向由 std::shared_ptr 管理的对象，但不会增加引用计数（use_count 不变）。</li>
+<li>不能直接访问对象：不能使用 * 解引用，也不能使用 -&gt; 调用成员函数。</li>
+<li>如何访问：必须通过 lock() 函数，将其提升（类型转换）为 std::shared_ptr，然后才能操作对象。</li>
+<li>解决循环引用问题（Cyclic Dependency Problem）：</li>
+<li><ul>
+<li>假设有两个类 A 和 B。A 中有一个 shared_ptr<B>，B 中有一个 shared_ptr<A>。</li>
+</ul>
+</li>
+<li><ul>
+<li>当外部指针销毁时，A 内部的 B 和 B 内部的 A 互相指着对方，导致它们的引用计数永远无法归零，造成内存泄漏（析构函数永远不会被调用）。</li>
+</ul>
+</li>
+<li><ul>
+<li>解决方案：将其中一方的 shared_ptr 改为 weak_ptr。这样它只“观察”对方，而不增加引用计数，打破循环。<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><code class="hljs dns">#include &lt;iostream&gt;<br>#include &lt;memory&gt;<br>#include &lt;string&gt;<br><br>// ==========================================<br>// <span class="hljs-number">1</span>. 循环引用问题（导致内存泄漏）<br>// ==========================================<br>class BadB<span class="hljs-comment">; // 前向声明</span><br><br>class BadA &#123;<br>public:<br>    st<span class="hljs-number">d::</span>shared_ptr&lt;BadB&gt; b_ptr<span class="hljs-comment">; // 修正：这里必须是 BadB，而不是 B</span><br>    BadA<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [BadA] Constructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~BadA<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [BadA] Destructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>class BadB &#123;<br>public:<br>    st<span class="hljs-number">d::</span>shared_ptr&lt;BadA&gt; a_ptr<span class="hljs-comment">;</span><br>    BadB<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [BadB] Constructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~BadB<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [BadB] Destructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>// ==========================================<br>// <span class="hljs-number">2</span>. 使用 weak_ptr 解决循环引用<br>// ==========================================<br>class GoodB<span class="hljs-comment">; // 前向声明</span><br><br>class GoodA &#123;<br>public:<br>    st<span class="hljs-number">d::</span>shared_ptr&lt;GoodB&gt; b_ptr<span class="hljs-comment">; // 持有 GoodB 的强引用</span><br>    GoodA<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [GoodA] Constructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~GoodA<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [GoodA] Destructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>class GoodB &#123;<br>public:<br>    st<span class="hljs-number">d::</span>weak_ptr&lt;GoodA&gt; a_ptr<span class="hljs-comment">; // 改为 weak_ptr，不增加计数，打破循环</span><br>    GoodB<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [GoodB] Constructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>    ~GoodB<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123; st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;  [GoodB] Destructor<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; &#125;</span><br>&#125;<span class="hljs-comment">;</span><br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;========== 1. 基础用法：lock() 提升 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#123;<br>        st<span class="hljs-number">d::</span>shared_ptr&lt;int&gt; sp = st<span class="hljs-number">d::</span>make_shared&lt;int&gt;<span class="hljs-punctuation">(</span><span class="hljs-number">42</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::</span>weak_ptr&lt;int&gt; wp = sp<span class="hljs-comment">; // wp 不增加计数</span><br><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;sp use_count: &quot;</span> &lt;&lt; sp.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br>        <br>        // 通过 lock<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> 提升为 shared_ptr<br>        if <span class="hljs-punctuation">(</span>st<span class="hljs-number">d::</span>shared_ptr&lt;int&gt; sp2 = wp.lock<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> &#123;<br>            st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;成功提升，值为: &quot;</span> &lt;&lt; *sp2 &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>            st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;提升后 use_count: &quot;</span> &lt;&lt; sp.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>        &#125; else &#123;<br>            st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;对象已被销毁，无法提升。<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>        &#125;<br>        // sp2 离开作用域，计数恢复为 <span class="hljs-number">1</span><br>    &#125; // sp 离开作用域，对象销毁<br><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>========== 2. 循环引用（内存泄漏演示）==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#123;<br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;创建 BadA 和 BadB...<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::</span>shared_ptr&lt;BadA&gt; <span class="hljs-keyword">a</span> = st<span class="hljs-number">d::</span>make_shared&lt;BadA&gt;<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::</span>shared_ptr&lt;BadB&gt; b = st<span class="hljs-number">d::</span>make_shared&lt;BadB&gt;<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>        <span class="hljs-keyword">a</span>-&gt;b_ptr = b<span class="hljs-comment">;</span><br>        b-&gt;a_ptr = <span class="hljs-keyword">a</span><span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;BadA use_count: &quot;</span> &lt;&lt; <span class="hljs-keyword">a</span>.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;BadB use_count: &quot;</span> &lt;&lt; b.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;作用域即将结束...<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#125;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;⚠️ 注意：BadA 和 BadB 的析构函数没有被调用！内存泄漏！<span class="hljs-char escape_">\n</span><span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;========== 3. 使用 weak_ptr 解决循环引用 ==========<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#123;<br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;创建 GoodA 和 GoodB...<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::</span>shared_ptr&lt;GoodA&gt; <span class="hljs-keyword">a</span> = st<span class="hljs-number">d::</span>make_shared&lt;GoodA&gt;<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>        st<span class="hljs-number">d::</span>shared_ptr&lt;GoodB&gt; b = st<span class="hljs-number">d::</span>make_shared&lt;GoodB&gt;<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>        <span class="hljs-keyword">a</span>-&gt;b_ptr = b<span class="hljs-comment">;</span><br>        b-&gt;a_ptr = <span class="hljs-keyword">a</span><span class="hljs-comment">; // 这里 a_ptr 是 weak_ptr，不会增加 a 的计数</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;GoodA use_count: &quot;</span> &lt;&lt; <span class="hljs-keyword">a</span>.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 1</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;GoodB use_count: &quot;</span> &lt;&lt; b.use_count<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &lt;&lt; <span class="hljs-string">&quot;<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">; // 输出 2</span><br>        st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;作用域即将结束...<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br>    &#125;<br>    st<span class="hljs-number">d::c</span>out &lt;&lt; <span class="hljs-string">&quot;✅ 完美：GoodA 和 GoodB 的析构函数都被正常调用了！<span class="hljs-char escape_">\n</span>&quot;</span><span class="hljs-comment">;</span><br><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs delphi">========== <span class="hljs-number">1</span>. 基础用法：lock() 提升 ==========<br>sp use_count: <span class="hljs-number">1</span><br>成功提升，值为: <span class="hljs-number">42</span><br>提升后 use_count: <span class="hljs-number">2</span><br><br>========== <span class="hljs-number">2</span>. 循环引用（内存泄漏演示）==========<br>创建 BadA 和 BadB...<br>  [BadA] <span class="hljs-function"><span class="hljs-keyword">Constructor</span></span><br><span class="hljs-function">  [<span class="hljs-title">BadB</span>] <span class="hljs-title">Constructor</span></span><br><span class="hljs-function"><span class="hljs-title">BadA</span> <span class="hljs-title">use_count</span>:</span> <span class="hljs-number">2</span><br>BadB use_count: <span class="hljs-number">2</span><br>作用域即将结束...<br>⚠️ 注意：BadA 和 BadB 的析构函数没有被调用！内存泄漏！<br><br>========== <span class="hljs-number">3</span>. 使用 weak_ptr 解决循环引用 ==========<br>创建 GoodA 和 GoodB...<br>  [GoodA] <span class="hljs-function"><span class="hljs-keyword">Constructor</span></span><br><span class="hljs-function">  [<span class="hljs-title">GoodB</span>] <span class="hljs-title">Constructor</span></span><br><span class="hljs-function"><span class="hljs-title">GoodA</span> <span class="hljs-title">use_count</span>:</span> <span class="hljs-number">1</span><br>GoodB use_count: <span class="hljs-number">2</span><br>作用域即将结束...<br>  [GoodA] <span class="hljs-function"><span class="hljs-keyword">Destructor</span></span><br><span class="hljs-function">  [<span class="hljs-title">GoodB</span>] <span class="hljs-title">Destructor</span></span><br><span class="hljs-function">✅ 完美：<span class="hljs-title">GoodA</span> 和 <span class="hljs-title">GoodB</span> 的析构函数都被正常调用了！</span><br><span class="hljs-function"></span><br><span class="hljs-function">[<span class="hljs-title">Execution</span> <span class="hljs-title">complete</span> <span class="hljs-title">with</span> <span class="hljs-title">exit</span> <span class="hljs-title">code</span> 0]</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>智能指针</div>
+      <div>http://example.com/2026/09/26/智能指针/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>LL</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/10/02/%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B/" title="模板参数类型">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">模板参数类型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/25/CMAKE%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" title="CMAKE学习记录">
+                        <span class="hidden-mobile">CMAKE学习记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

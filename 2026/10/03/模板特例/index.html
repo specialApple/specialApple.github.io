@@ -19,19 +19,21 @@
   <meta name="author" content="LL">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="CMAKE学习记录">
-<meta property="og:url" content="http://example.com/2026/09/25/CMAKE%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+    <meta name="description" content="模板特例在进行模板特化（特例）时，匹配式写在模板类名之后，用尖括号 &lt; &gt; 括起。编写特化匹配式需要遵循以下几条规则：  位置与符号：匹配式写在模板类名之后，用尖括号括起。 参数数量：匹配式用逗号分隔的项目列表，项目数必须与通例（主模板）模板参数总数一致。 参数类型：匹配式中各项类型必须与通例对应模板参数类型一致。 参数值：匹配式项目可以是具体的模板参数值，也可以是特例自己声明的模板参">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模板特例">
+<meta property="og:url" content="http://example.com/2026/10/03/%E6%A8%A1%E6%9D%BF%E7%89%B9%E4%BE%8B/index.html">
 <meta property="og:site_name" content="SpecialApple">
+<meta property="og:description" content="模板特例在进行模板特化（特例）时，匹配式写在模板类名之后，用尖括号 &lt; &gt; 括起。编写特化匹配式需要遵循以下几条规则：  位置与符号：匹配式写在模板类名之后，用尖括号括起。 参数数量：匹配式用逗号分隔的项目列表，项目数必须与通例（主模板）模板参数总数一致。 参数类型：匹配式中各项类型必须与通例对应模板参数类型一致。 参数值：匹配式项目可以是具体的模板参数值，也可以是特例自己声明的模板参">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-09-25T03:46:16.000Z">
-<meta property="article:modified_time" content="2026-09-25T03:46:16.585Z">
+<meta property="article:published_time" content="2026-10-03T07:36:50.000Z">
+<meta property="article:modified_time" content="2026-10-06T02:54:22.463Z">
 <meta property="article:author" content="LL">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>CMAKE学习记录 - SpecialApple</title>
+  <title>模板特例 - SpecialApple</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -300,7 +302,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="CMAKE学习记录"></span>
+            <span id="subtitle" data-typed-text="模板特例"></span>
           
         </div>
 
@@ -311,8 +313,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-25 11:46" pubdate>
-          2026年9月25日 中午
+        <time datetime="2026-10-03 15:36" pubdate>
+          2026年10月3日 下午
         </time>
       </span>
     
@@ -323,7 +325,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          3.9k 字
         
       </span>
     
@@ -334,7 +336,7 @@
         
         
         
-          1 分钟
+          33 分钟
         
       </span>
     
@@ -373,12 +375,30 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">CMAKE学习记录</h1>
+            <h1 id="seo-header">模板特例</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <h3 id="模板特例"><a href="#模板特例" class="headerlink" title="模板特例"></a>模板特例</h3><p>在进行模板特化（特例）时，匹配式写在模板类名之后，用尖括号 &lt; &gt; 括起。编写特化匹配式需要遵循以下几条规则：</p>
+<ul>
+<li>位置与符号：匹配式写在模板类名之后，用尖括号括起。</li>
+<li>参数数量：匹配式用逗号分隔的项目列表，项目数必须与通例（主模板）模板参数总数一致。</li>
+<li>参数类型：匹配式中各项类型必须与通例对应模板参数类型一致。</li>
+<li>参数值：匹配式项目可以是具体的模板参数值，也可以是特例自己声明的模板参数。</li>
+<li>修饰符：当匹配式项目是类型模板参数时，与函数变量类似，模板参数也可以用 *、&amp;、const 及 volatile 修饰。</li>
+</ul>
+<h4 id="多种特例写法"><a href="#多种特例写法" class="headerlink" title="多种特例写法"></a>多种特例写法</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 用于模板型模板参数的模板</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-type">int</span> i&gt; <span class="hljs-keyword">struct</span> <span class="hljs-title class_">S1</span>;<br><span class="hljs-comment">// 模板通例，有三个模板参数，分别是类型参数、非类型参数及模板型参数</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-type">int</span> i, <span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span>, <span class="hljs-type">int</span>&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">SP</span>&gt; <br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>;<br><span class="hljs-comment">// 特例1，可匹配 S&lt;char, 任意整数, S1&gt;</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-type">int</span> i, <span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span>, <span class="hljs-type">int</span>&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">SP</span>&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;<span class="hljs-type">char</span>, i, SP&gt;;<br><span class="hljs-comment">// 特例2，可匹配 S&lt;任意有 const 修饰的类型, 任意整数, S1&gt;</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-type">int</span> i, <span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span>, <span class="hljs-type">int</span>&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">SP</span>&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;<span class="hljs-type">const</span> T, i, SP&gt;;<br><span class="hljs-comment">// 特例3，完全特例，只能匹配 S&lt;char, 10, S1&gt;</span><br><span class="hljs-comment">// 完全特例的匹配式中没有用到任何模板参数，所有项目都是确定的类型或值或模板。</span><br><span class="hljs-comment">// 其模板参数列表为空。相对的，模板参数列表不为空的特例称为部分特例。</span><br><span class="hljs-keyword">template</span>&lt;&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;<span class="hljs-type">char</span>, <span class="hljs-number">10</span>, S1&gt;;<br><span class="hljs-comment">// 特例4，以模板实例作为类型参数值。匹配 S&lt;S1&lt;任意类型, 10&gt;, 10, S1&gt;</span><br><span class="hljs-comment">// 匹配式第一项是一个模板实例 S1&lt;T, 10&gt;，这是一个类型，该类型是基于模板 S1 自动生成的，</span><br><span class="hljs-comment">// 是一个合法的类型参数值。特例约束模板第一参数必须是由模板 S1 生成的模板实例类型，</span><br><span class="hljs-comment">// 第三参数必须是模板 S1，且 S1 模板实例类型必须是用任意类型及常数 10 为参数所生成的。</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;S1&lt;T, <span class="hljs-number">10</span>&gt;, <span class="hljs-number">10</span>, S1&gt;;<br><span class="hljs-comment">// 特例5，错误！匹配式项目数与通例参数个数不一致</span><br><span class="hljs-comment">// template&lt;typename T, int i, template&lt;typename, int&gt; class SP, typename TT&gt;</span><br><span class="hljs-comment">// struct S&lt;T, i, SP, TT&gt;;</span><br><span class="hljs-comment">// 特例6，错误！匹配式项目类型与通例参数类型不同</span><br><span class="hljs-comment">// template&lt;typename T&gt;</span><br><span class="hljs-comment">// struct S&lt;char, 10, T&gt;;</span><br><span class="hljs-comment">// 特例7，错误！模板型参数 SP 与通例中 SP 类型不一致</span><br><span class="hljs-comment">// template&lt;typename T, int i, template&lt;typename&gt; class SP&gt;</span><br><span class="hljs-comment">// struct S&lt;const T, i, SP&gt;;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="特例匹配规则"><a href="#特例匹配规则" class="headerlink" title="特例匹配规则"></a>特例匹配规则</h4><p>C++模板特化的匹配遵循“最特殊化优先”的原则，编译器会将用户提供的实参按“完全特化 &gt; 部分特化 &gt; 主模板（通例）”的优先级进行模式匹配。编写特化时，匹配式必须与主模板保持参数数量一致，但允许将部分参数固定为具体类型、值或添加 const、*、&amp; 等修饰；特化版本自身的模板参数列表（template&lt;…&gt;）只需声明匹配模式中剩余的“未知量”，且其参数命名与主模板完全无关（独立作用域）。当多个特化版本同时匹配一组实参时，编译器会尝试寻找约束最严苛的那一个，若无法区分谁更特殊，就会引发二义性（Ambiguity）编译错误。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span><br><span class="hljs-comment">// 通例（主模板）：接受三个类型参数</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T0, <span class="hljs-keyword">typename</span> T1, <span class="hljs-keyword">typename</span> T2&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span> &#123;<br>    <span class="hljs-function">std::string <span class="hljs-title">id</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;General&quot;</span>; &#125;<br>&#125;;<br><span class="hljs-comment">// 特例 1：约束第三参数必须为 char</span><br><span class="hljs-comment">// 解析：主模板的第一、第二参数未知，保留为 T0, T1</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T0, <span class="hljs-keyword">typename</span> T1&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;T0, T1, <span class="hljs-type">char</span>&gt; &#123;<br>    <span class="hljs-function">std::string <span class="hljs-title">id</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Specialization #1&quot;</span>; &#125;<br>&#125;;<br><span class="hljs-comment">// 特例 2：约束第二、第三参数必须均为 char</span><br><span class="hljs-comment">// 解析：只有第一参数未知，保留为 T0。（这里的 T0 只是特化版本自己起的形参名，与主模板无关）</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T0&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;T0, <span class="hljs-type">char</span>, <span class="hljs-type">char</span>&gt; &#123;<br>    <span class="hljs-function">std::string <span class="hljs-title">id</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Specialization #2&quot;</span>; &#125;<br>&#125;;<br><span class="hljs-comment">// 特例 3：约束第一参数必须为 int，且第二、第三参数相同</span><br><span class="hljs-comment">// 解析：第一个位置写死为 int，第二、第三位置绑定同一个未知类型 T。</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span>&lt;<span class="hljs-type">int</span>, T, T&gt; &#123;<br>    <span class="hljs-function">std::string <span class="hljs-title">id</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Specialization #3&quot;</span>; &#125;<br>&#125;;<br><span class="hljs-comment">// 主函数测试</span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br>    <span class="hljs-comment">// 实例1：传入 &lt;float, float, float&gt;，匹配通例</span><br>    cout &lt;&lt; <span class="hljs-built_in">S</span>&lt;<span class="hljs-type">float</span>, <span class="hljs-type">float</span>, <span class="hljs-type">float</span>&gt;().<span class="hljs-built_in">id</span>() &lt;&lt; endl;  <span class="hljs-comment">// 输出 &quot;General&quot;</span><br>    <span class="hljs-comment">// 实例2：传入 &lt;int, int, int&gt;，匹配特例3</span><br>    cout &lt;&lt; <span class="hljs-built_in">S</span>&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt;().<span class="hljs-built_in">id</span>() &lt;&lt; endl;        <span class="hljs-comment">// 输出 &quot;Specialization #3&quot;</span><br>    <span class="hljs-comment">// 实例3：传入 &lt;int, int, char&gt;，匹配特例1</span><br>    cout &lt;&lt; <span class="hljs-built_in">S</span>&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>, <span class="hljs-type">char</span>&gt;().<span class="hljs-built_in">id</span>() &lt;&lt; endl;       <span class="hljs-comment">// 输出 &quot;Specialization #1&quot;</span><br>    <span class="hljs-comment">// 实例4：传入 &lt;char, char, char&gt;，匹配特例2</span><br>    cout &lt;&lt; <span class="hljs-built_in">S</span>&lt;<span class="hljs-type">char</span>, <span class="hljs-type">char</span>, <span class="hljs-type">char</span>&gt;().<span class="hljs-built_in">id</span>() &lt;&lt; endl;     <span class="hljs-comment">// 输出 &quot;Specialization #2&quot;</span><br>    <span class="hljs-comment">// 实例5：传入 &lt;int, char, char&gt;，有歧义（被注释掉）</span><br>    <span class="hljs-comment">// cout &lt;&lt; S&lt;int, char, char&gt;().id() &lt;&lt; endl;   // 编译报错！</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<p>#include <iostream><br>&#x2F;&#x2F; #1 泛型模板函数：接受任意类型的参数 T<br>template<typename T><br>void func(T v) {std::cout &lt;&lt; “#1: “ &lt;&lt; v &lt;&lt; std::endl;}<br>&#x2F;&#x2F; #2 模板特化：针对 float 类型的显式特化版本<br>template&lt;&gt;<br>void func(float v) {std::cout &lt;&lt; “#2: “ &lt;&lt; v &lt;&lt; std::endl;}<br>&#x2F;&#x2F; #3 普通函数重载：针对 float 类型的非模板重载版本<br>void func(float v) {std::cout &lt;&lt; “#3: “ &lt;&lt; v &lt;&lt; std::endl;}<br>&#x2F;&#x2F; #4 普通函数：名为 func2，接受 float 类型参数<br>void func2(float v) {std::cout &lt;&lt; “#4: “ &lt;&lt; v &lt;&lt; std::endl;}<br>int main()<br>{<br>    func2(1);          &#x2F;&#x2F; 输出 “#4: 1” (int 隐式转换为 float，调用 #4)<br>    func(1);           &#x2F;&#x2F; 输出 “#1: 1” (模板推导 T&#x3D;int，调用泛型模板 #1)<br>    func(1.);          &#x2F;&#x2F; 输出 “#1: 1” (模板推导 T&#x3D;double，调用泛型模板 #1)<br>    func(1.f);         &#x2F;&#x2F; 输出 “#3: 1” (非模板函数优先于模板特化，调用 #3)<br>    func&lt;&gt;(1.f);       &#x2F;&#x2F; 输出 “#2: 1” (显式指定模板参数，强制调用模板特化 #2)<br>}</p>
+
                 
               </div>
             
@@ -395,8 +415,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>CMAKE学习记录</div>
-      <div>http://example.com/2026/09/25/CMAKE学习记录/</div>
+      <div>模板特例</div>
+      <div>http://example.com/2026/10/03/模板特例/</div>
     </div>
     <div class="license-meta">
       
@@ -408,7 +428,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年9月25日</div>
+          <div>2026年10月3日</div>
         </div>
       
       
@@ -440,18 +460,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/26/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" title="智能指针">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">智能指针</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/09/25/%E7%B1%BB%E6%A8%A1%E6%9D%BF/" title="类模板">
-                        <span class="hidden-mobile">类模板</span>
+                      <a href="/2026/10/02/%E6%8C%87%E9%92%88/" title="指针">
+                        <span class="hidden-mobile">指针</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

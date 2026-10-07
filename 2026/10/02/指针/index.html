@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="LL">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="函数指针 声明函数指针 让函数指针指向函数地址 通过函数指针调用函数   函数名就是函数的地址 函数指针定义1int (*fp)(int a); 简化函数指针的定义12typedef int (*fp)(int a);fp f &#x3D; test; 函数指针作为参数12345678910111213141516171819int test(int a)&#123;    return a-1;&amp;#125">
+<meta property="og:type" content="article">
+<meta property="og:title" content="指针">
+<meta property="og:url" content="http://example.com/2026/10/02/%E6%8C%87%E9%92%88/index.html">
+<meta property="og:site_name" content="SpecialApple">
+<meta property="og:description" content="函数指针 声明函数指针 让函数指针指向函数地址 通过函数指针调用函数   函数名就是函数的地址 函数指针定义1int (*fp)(int a); 简化函数指针的定义12typedef int (*fp)(int a);fp f &#x3D; test; 函数指针作为参数12345678910111213141516171819int test(int a)&#123;    return a-1;&amp;#125">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-02T08:45:02.000Z">
+<meta property="article:modified_time" content="2026-10-03T03:30:34.190Z">
+<meta property="article:author" content="LL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>指针 - SpecialApple</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="指针"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-10-02 16:45" pubdate>
+          2026年10月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">指针</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h3><ol>
+<li>声明函数指针</li>
+<li>让函数指针指向函数地址</li>
+<li>通过函数指针调用函数</li>
+</ol>
+<ul>
+<li>函数名就是函数的地址</li>
+<li>函数指针定义<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dns">int <span class="hljs-punctuation">(</span>*fp<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>int <span class="hljs-keyword">a</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure></li>
+<li>简化函数指针的定义<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dns">typedef int <span class="hljs-punctuation">(</span>*fp<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>int <span class="hljs-keyword">a</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>fp f = test<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure></li>
+<li>函数指针作为参数<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs dns">int test<span class="hljs-punctuation">(</span>int <span class="hljs-keyword">a</span><span class="hljs-punctuation">)</span><br>&#123;<br>    return <span class="hljs-keyword">a</span>-<span class="hljs-number">1</span><span class="hljs-comment">;</span><br>&#125;<br>int test2<span class="hljs-punctuation">(</span>int <span class="hljs-punctuation">(</span>*fun<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>int<span class="hljs-punctuation">)</span>,int b<span class="hljs-punctuation">)</span><br>&#123;<br>    <br>    int c = fun<span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">)</span>+b<span class="hljs-comment">;</span><br>    return c<span class="hljs-comment">;</span><br>&#125;<br> <br>int main<span class="hljs-punctuation">(</span>int argc, const char * argv[]<span class="hljs-punctuation">)</span><br>&#123;<br>    <br>    typedef int <span class="hljs-punctuation">(</span>*fp<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>int <span class="hljs-keyword">a</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    fp f = test<span class="hljs-comment">;</span><br>    cout&lt;&lt;test2<span class="hljs-punctuation">(</span>f, <span class="hljs-number">1</span><span class="hljs-punctuation">)</span>&lt;&lt;endl<span class="hljs-comment">; // 调用 test2 的时候，把test函数的地址作为参数传递给了 test2</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+通常函数指针的作用是实现回调(callback)，即由调用方将所需要操作包装成某个函数f0，并将指向此函数的指针&amp;f0作为参数传递给函数f1。函数f1在运行时回调所指函数f0，从而实现调用方所期待操作。f0就是一个回调函数。将回调函数指针作为被调用函数的参数时，实现的是动态回调，只有在运行时才能确定是回调哪个函数。</li>
+</ul>
+<h3 id="成员函数指针-类成员函数指针指向类中的非静态成员函数"><a href="#成员函数指针-类成员函数指针指向类中的非静态成员函数" class="headerlink" title="成员函数指针|类成员函数指针指向类中的非静态成员函数"></a>成员函数指针|类成员函数指针指向类中的非静态成员函数</h3><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><code class="hljs dns">// 指向类成员函数的函数指针<br>#include &lt;iostream&gt;<br>#include &lt;cstdio&gt;<br>using namespace std<span class="hljs-comment">;</span><br>// ============================<br>// 类 <span class="hljs-keyword">A</span> 的定义<br>// ============================<br>class <span class="hljs-keyword">A</span><br>&#123;<br>    public:<br>        // 构造函数：参数 aa 有默认值 <span class="hljs-number">0</span><br>        // : <span class="hljs-keyword">a</span><span class="hljs-punctuation">(</span>aa<span class="hljs-punctuation">)</span> 是初始化列表，表示用 aa 初始化成员变量 <span class="hljs-keyword">a</span><br>        <span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span>int aa = <span class="hljs-number">0</span><span class="hljs-punctuation">)</span>:<span class="hljs-keyword">a</span><span class="hljs-punctuation">(</span>aa<span class="hljs-punctuation">)</span>&#123;&#125;<br>        // 析构函数：这里为空，什么也不做<br>        ~<span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>&#123;&#125;<br>        // 普通成员函数：设置成员变量 <span class="hljs-keyword">a</span> 的值<br>        // 参数 aa 有默认值 <span class="hljs-number">1</span><br>        void setA<span class="hljs-punctuation">(</span>int aa = <span class="hljs-number">1</span><span class="hljs-punctuation">)</span><br>        &#123;<br>            <span class="hljs-keyword">a</span> = aa<span class="hljs-comment">;</span><br>        &#125;<br>        // 虚函数 print：输出 <span class="hljs-keyword">A</span> 中的 <span class="hljs-keyword">a</span><br>        virtual void print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>        &#123;<br>            cout &lt;&lt; <span class="hljs-string">&quot;A: &quot;</span> &lt;&lt; <span class="hljs-keyword">a</span> &lt;&lt; endl<span class="hljs-comment">;</span><br>        &#125;<br>        // 虚函数 printa：输出 <span class="hljs-keyword">A</span> 中的 <span class="hljs-keyword">a</span>，带前缀 A1<br>        virtual void printa<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>        &#123;<br>            cout &lt;&lt; <span class="hljs-string">&quot;A1: &quot;</span> &lt;&lt; <span class="hljs-keyword">a</span> &lt;&lt; endl<span class="hljs-comment">;</span><br>        &#125;<br>    private:<br>        int <span class="hljs-keyword">a</span><span class="hljs-comment">;  // A 类的私有成员变量</span><br>&#125;<span class="hljs-comment">;</span><br>// ============================<br>// 类 B 继承自 <span class="hljs-keyword">A</span><br>// ============================<br>class B : public <span class="hljs-keyword">A</span><br>&#123;<br>    public:<br>        // B 的默认构造函数<br>        // : <span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> 表示先调用基类 <span class="hljs-keyword">A</span> 的默认构造函数（因为 <span class="hljs-keyword">A</span> 的构造函数有默认参数，所以相当于 <span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span>）<br>        // b<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span> 表示把自己的成员 b 初始化为 <span class="hljs-number">0</span><br>        B<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>:<span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>, b<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span>&#123;&#125;<br>        // B 的带参构造函数<br>        // : <span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span>aa<span class="hljs-punctuation">)</span> 表示用参数 aa 去调用基类 <span class="hljs-keyword">A</span> 的构造函数，从而初始化从 <span class="hljs-keyword">A</span> 继承来的部分<br>        // b<span class="hljs-punctuation">(</span>bb<span class="hljs-punctuation">)</span> 表示用自己的参数 bb 初始化成员 b<br>        B<span class="hljs-punctuation">(</span>int aa, int bb<span class="hljs-punctuation">)</span>:<span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span>aa<span class="hljs-punctuation">)</span>, b<span class="hljs-punctuation">(</span>bb<span class="hljs-punctuation">)</span>&#123;&#125;<br>        // 析构函数<br>        ~B<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>&#123;&#125;<br>        // 重写基类 <span class="hljs-keyword">A</span> 的虚函数 print<br>        virtual void print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>        &#123;<br>            <span class="hljs-number">A::</span>print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;             // 先调用基类 A 的 print()，输出 &quot;A: a&quot;</span><br>            cout &lt;&lt; <span class="hljs-string">&quot;B: &quot;</span> &lt;&lt; b &lt;&lt; endl<span class="hljs-comment">; // 再输出 B 自己的 b</span><br>        &#125;<br>        // 重写基类 <span class="hljs-keyword">A</span> 的虚函数 printa<br>        virtual void printa<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>        &#123;<br>            <span class="hljs-number">A::</span>printa<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;            // 先调用基类 A 的 printa()，输出 &quot;A1: a&quot;</span><br>            cout &lt;&lt; <span class="hljs-string">&quot;B: &quot;</span> &lt;&lt; b &lt;&lt; endl<span class="hljs-comment">; // 再输出 B 自己的 b</span><br>        &#125;<br>    private:<br>        int b<span class="hljs-comment">;  // B 类自己的私有成员变量</span><br>&#125;<span class="hljs-comment">;</span><br>// ============================<br>// 主函数<br>// ============================<br>int main<span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span><br>&#123;<br>    <span class="hljs-keyword">A</span> <span class="hljs-keyword">a</span><span class="hljs-comment">;    // 创建 A 对象 a，调用 A(int aa = 0)，所以 a 内部的 a = 0</span><br>    B b<span class="hljs-comment">;    // 创建 B 对象 b，调用 B()，基类 A 部分 a = 0，自己的 b = 0</span><br>            // 注意：这里的 b 对象在后面的代码中并没有真正被使用<br>    // 定义一个指向 <span class="hljs-keyword">A</span> 类成员函数的指针 <span class="hljs-keyword">ptr</span><br>    // 该成员函数接收一个 int 参数，返回 void<br>    // 这里让它指向 <span class="hljs-number">A::</span>setA<br>    void <span class="hljs-punctuation">(</span><span class="hljs-number">A::</span>*<span class="hljs-keyword">ptr</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>int<span class="hljs-punctuation">)</span> = &amp;<span class="hljs-number">A::</span>setA<span class="hljs-comment">;</span><br>    // 定义一个指向 <span class="hljs-keyword">A</span> 类型的指针 pa，让它指向对象 <span class="hljs-keyword">a</span><br>    <span class="hljs-keyword">A</span>* pa = &amp;<span class="hljs-keyword">a</span><span class="hljs-comment">;</span><br>    // 下面三个 printf 用于打印成员函数指针的内部值<br>    // 注意：用 %p 打印成员函数指针并不是标准做法，不同编译器输出可能不同<br>    // 对于非虚函数，通常返回其在内存中的真实地址<br>    printf<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A::set(): %p<span class="hljs-char escape_">\n</span>&quot;</span>, &amp;<span class="hljs-number">A::</span>setA<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 对于虚函数，很多编译器返回它在虚函数表中的偏移位置（例如 <span class="hljs-number">0</span>x1、<span class="hljs-number">0</span>x2 等）<br>    // 这里写的是 &amp;<span class="hljs-number">A::</span>print，但注释却写成 <span class="hljs-number">B::</span>print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>，其实打印的是 <span class="hljs-number">A::</span>print<br>    printf<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;B::print(): %p<span class="hljs-char escape_">\n</span>&quot;</span>, &amp;<span class="hljs-number">A::</span>print<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 同上，打印 <span class="hljs-number">A::</span>printa 的成员函数指针值<br>    printf<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;B::print(): %p<span class="hljs-char escape_">\n</span>&quot;</span>, &amp;<span class="hljs-number">A::</span>printa<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 调用 <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>，因为 <span class="hljs-keyword">a</span> 是 <span class="hljs-keyword">A</span> 对象，所以输出 <span class="hljs-string">&quot;A: 0&quot;</span><br>    <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 调用 <span class="hljs-keyword">a</span>.setA<span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">)</span>，把 <span class="hljs-keyword">a</span> 内部的 <span class="hljs-keyword">a</span> 设置为 <span class="hljs-number">10</span><br>    <span class="hljs-keyword">a</span>.setA<span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 再次调用 <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>，输出 <span class="hljs-string">&quot;A: 10&quot;</span><br>    <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 调用 <span class="hljs-keyword">a</span>.setA<span class="hljs-punctuation">(</span><span class="hljs-number">100</span><span class="hljs-punctuation">)</span>，把 <span class="hljs-keyword">a</span> 内部的 <span class="hljs-keyword">a</span> 设置为 <span class="hljs-number">100</span><br>    <span class="hljs-keyword">a</span>.setA<span class="hljs-punctuation">(</span><span class="hljs-number">100</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 再次调用 <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>，输出 <span class="hljs-string">&quot;A: 100&quot;</span><br>    <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 使用成员函数指针调用函数<br>    // <span class="hljs-punctuation">(</span>pa-&gt;*<span class="hljs-keyword">ptr</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-number">1000</span><span class="hljs-punctuation">)</span> 等价于 pa-&gt;setA<span class="hljs-punctuation">(</span><span class="hljs-number">1000</span><span class="hljs-punctuation">)</span>，也就是 <span class="hljs-keyword">a</span>.setA<span class="hljs-punctuation">(</span><span class="hljs-number">1000</span><span class="hljs-punctuation">)</span><br>    // 对于指向类成员函数的指针，必须通过对象或对象指针来调用，因为需要传入 this 指针<br>    <span class="hljs-punctuation">(</span>pa-&gt;*<span class="hljs-keyword">ptr</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-number">1000</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 此时 <span class="hljs-keyword">a</span> 内部的 <span class="hljs-keyword">a</span> 已经变成 <span class="hljs-number">1000</span>，输出 <span class="hljs-string">&quot;A: 1000&quot;</span><br>    <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 另一种调用成员函数指针的方式：通过对象本身调用<br>    // <span class="hljs-punctuation">(</span><span class="hljs-keyword">a</span>.*<span class="hljs-keyword">ptr</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-number">10000</span><span class="hljs-punctuation">)</span> 等价于 <span class="hljs-keyword">a</span>.setA<span class="hljs-punctuation">(</span><span class="hljs-number">10000</span><span class="hljs-punctuation">)</span><br>    <span class="hljs-punctuation">(</span><span class="hljs-keyword">a</span>.*<span class="hljs-keyword">ptr</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-number">10000</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 此时 <span class="hljs-keyword">a</span> 内部的 <span class="hljs-keyword">a</span> 变成 <span class="hljs-number">10000</span>，输出 <span class="hljs-string">&quot;A: 10000&quot;</span><br>    <span class="hljs-keyword">a</span>.print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="成员函数指针-类成员函数指针指向类中的静态成员函数"><a href="#成员函数指针-类成员函数指针指向类中的静态成员函数" class="headerlink" title="成员函数指针|类成员函数指针指向类中的静态成员函数"></a>成员函数指针|类成员函数指针指向类中的静态成员函数</h3><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs dns">// 指向类成员函数的函数指针 与 指向静态成员函数的函数指针 的对比示例<br>#include &lt;iostream&gt;<br>using namespace std<span class="hljs-comment">;</span><br><br>class <span class="hljs-keyword">A</span> &#123;<br>public:<br>    // p1 是一个指向非 static 成员函数的函数指针<br>    // 类型为：void <span class="hljs-punctuation">(</span><span class="hljs-number">A::</span>*<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span>，表示它是指向 <span class="hljs-keyword">A</span> 类中无参、返回 void 的非静态成员函数的指针<br>    void <span class="hljs-punctuation">(</span><span class="hljs-number">A::</span>*p1<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // p2 是一个指向 static 成员函数的函数指针<br>    // 类型为：void <span class="hljs-punctuation">(</span>*<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span>，就是普通的函数指针<br>    void <span class="hljs-punctuation">(</span>*p2<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br><br>    <span class="hljs-keyword">A</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>        /* 对指向非 static 成员函数的指针和指向 static 成员函数的指针<br>         ** 的变量的赋值方式是一样的，都是 &amp;ClassNam<span class="hljs-number">e::</span>memberFunction 形式<br>         ** 区别在于：<br>         ** 对 p1 只能用非 static 成员函数赋值<br>         ** 对 p2 只能用 static 成员函数赋值<br>         */<br>        p1 = &amp;<span class="hljs-number">A::f</span>una<span class="hljs-comment">; // 函数指针赋值一定要使用 &amp;</span><br>        p2 = &amp;<span class="hljs-number">A::f</span>unb<span class="hljs-comment">;</span><br>        // p1 = &amp;<span class="hljs-number">A::f</span>unb<span class="hljs-comment">; // error：p1 只能指向非静态成员函数</span><br>        // p2 = &amp;<span class="hljs-number">A::f</span>una<span class="hljs-comment">; // error：p2 只能指向静态成员函数</span><br>        // p1 = &amp;funa<span class="hljs-comment">;    // error：编译器错误 C2276，必须写 &amp;A::funa</span><br>        // p2 = &amp;funb<span class="hljs-comment">;    // error：编译器错误 C2276，必须写 &amp;A::funb</span><br>    &#125;<br><br>    // 非静态成员函数，隐含 this 指针<br>    void funa<span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span> &#123;<br>        puts<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    &#125;<br><br>    // 静态成员函数，没有 this 指针，可以当作普通函数<br>    static void funb<span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span> &#123;<br>        puts<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    &#125;<br>&#125;<span class="hljs-comment">;</span><br><br>int main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>    <span class="hljs-keyword">A</span> <span class="hljs-keyword">a</span><span class="hljs-comment">; // 创建 A 对象 a，构造函数中已经给 a.p1 和 a.p2 赋好值</span><br>    // p 是指向 <span class="hljs-keyword">A</span> 中非 static 成员函数的函数指针<br>    void <span class="hljs-punctuation">(</span><span class="hljs-number">A::</span>*p<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    // 通过对象 <span class="hljs-keyword">a</span> 和它内部的成员指针 <span class="hljs-keyword">a</span>.p1 来调用非静态成员函数<br>    // 注意：<span class="hljs-keyword">a</span>.p1 本身是成员变量，所以要先用 <span class="hljs-keyword">a</span>.p1 取出指针，再用 <span class="hljs-punctuation">(</span><span class="hljs-keyword">a</span>.*指针<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> 调用<br>    <span class="hljs-punctuation">(</span><span class="hljs-keyword">a</span>.*<span class="hljs-keyword">a</span>.p1<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">; // 打印 A</span><br>    // 使用 .*（实例对象）或者 -&gt;*（实例对象指针）调用类成员函数指针所指向的函数<br>    p = <span class="hljs-keyword">a</span>.p1<span class="hljs-comment">;    // 把 a.p1 保存的成员函数指针赋给 p</span><br>    <span class="hljs-punctuation">(</span><span class="hljs-keyword">a</span>.*p<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;    // 通过对象 a 调用，打印 A</span><br>    <span class="hljs-keyword">A</span> *b = &amp;<span class="hljs-keyword">a</span><span class="hljs-comment">;   // b 是指向对象 a 的指针</span><br>    <span class="hljs-punctuation">(</span>b-&gt;*p<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;   // 通过对象指针 b 调用，打印 A</span><br>    /* 尽管 <span class="hljs-keyword">a</span>.p2 本身是个非 static 变量，但是 <span class="hljs-keyword">a</span>.p2 是指向 static 函数的函数指针，<br>     ** 所以下面这句话是错的！<br>     */<br>    // p = <span class="hljs-keyword">a</span>.p2<span class="hljs-comment">; // error：类型不匹配，p 是成员函数指针，a.p2 是普通函数指针</span><br>    // 定义一个普通函数指针 pp，指向静态成员函数 <span class="hljs-number">A::f</span>unb<br>    void <span class="hljs-punctuation">(</span>*pp<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span>void<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>    pp = &amp;<span class="hljs-number">A::f</span>unb<span class="hljs-comment">; // 静态成员函数可以用普通函数指针指向</span><br>    pp<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;          // 直接调用，打印 B</span><br>    return <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>指针</div>
+      <div>http://example.com/2026/10/02/指针/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>LL</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年10月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/10/03/%E6%A8%A1%E6%9D%BF%E7%89%B9%E4%BE%8B/" title="模板特例">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">模板特例</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/10/02/%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B/" title="模板参数类型">
+                        <span class="hidden-mobile">模板参数类型</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
